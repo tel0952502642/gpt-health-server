@@ -30,6 +30,3 @@ def delete():
     data = request.get_json()
     result = sheet_writer.delete_eatlog(data)
     return jsonify(result)
-
-if __name__ == '__main__':
-    app.run(debug=True)
