@@ -1,59 +1,39 @@
 from flask import Flask, request, jsonify
-import os, json, traceback
-import gspread
-from google.oauth2.service_account import Credentials
+from sheet_writer import add_row_to_sheet
 
 app = Flask(__name__)
 
-# ✅ Google Sheets API 認證（用 Render 環境變數）
-scopes = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
-
-creds_info = json.loads(os.environ["GOOGLE_CREDENTIALS"])
-creds = Credentials.from_service_account_info(creds_info, scopes=scopes)
-gc = gspread.authorize(creds)
-
-# ✅ 設定 Google Sheets 表格 ID 與工作表名稱
-SPREADSHEET_ID = "1vKH4W5WjUqdveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo"
-WORKSHEET_NAME = "吃食紀錄表"
-
-@app.route("/")
+@app.route('/')
 def home():
-    return "GPT 健康伺服器已啟動 🧠"
+    return '👋 Health Logger is alive.'
 
-@app.route("/eatlog", methods=["POST"])
-def add_eatlog():
+@app.route('/eatlog', methods=['POST'])
+def eatlog():
     try:
-        data = request.get_json()
+        # 強制解析 JSON（避免 Content-Type 設錯）
+        data = request.get_json(force=True)
+        print("📥 收到資料：", data)
 
-        # 🧾 每筆欄位對應
-        row = [
-            data.get("date", ""),
-            data.get("time", ""),
-            data.get("meal", ""),
-            data.get("item", ""),
-            data.get("amount", ""),
-            data.get("protein", ""),
-            data.get("calories", ""),
-            data.get("note", "")
-        ]
+        # 若資料為空，回傳錯誤
+        if not data:
+            return jsonify({"status": "error", "message": "No JSON received"}), 400
 
-        # ✅ 寫入 Google Sheets
-        sh = gc.open_by_key(SPREADSHEET_ID)
-        worksheet = sh.worksheet(WORKSHEET_NAME)
-        worksheet.append_row(row, value_input_option="USER_ENTERED")
+        # 寫入 Google Sheet
+        add_row_to_sheet(data)
+        print("✅ 成功寫入 Google Sheet！")
 
-        return jsonify({"status": "success", "message": "資料已寫入"}), 200
+        # 回傳成功訊息
+        return jsonify({
+            "status": "success",
+            "data": data
+        }), 200
 
     except Exception as e:
-        # 錯誤處理與回傳完整錯誤訊息
+        print("❌ 錯誤：", str(e))
         return jsonify({
             "status": "error",
-            "message": str(e),
-            "trace": traceback.format_exc()
+            "message": str(e)
         }), 500
 
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
