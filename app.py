@@ -1,32 +1,20 @@
 from flask import Flask, request, jsonify
-import sheet_writer
+from sheet_writer import write_eatlog_to_sheet
 
 app = Flask(__name__)
 
 @app.route('/')
-def index():
-    return "GPT Flask CRUD Server Running"
+def home():
+    return "GPT Health Server Running!"
 
 @app.route('/eatlog', methods=['POST'])
 def eatlog():
-    data = request.get_json()
-    result = sheet_writer.add_eatlog(data)
-    return jsonify(result)
+    data = request.json
+    try:
+        write_eatlog_to_sheet(data)
+        return jsonify({"status": "success", "message": "eatlog added"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/query', methods=['GET'])
-def query():
-    date = request.args.get("date")
-    result = sheet_writer.query_eatlog(date)
-    return jsonify(result)
-
-@app.route('/update', methods=['POST'])
-def update():
-    data = request.get_json()
-    result = sheet_writer.update_eatlog(data)
-    return jsonify(result)
-
-@app.route('/delete', methods=['POST'])
-def delete():
-    data = request.get_json()
-    result = sheet_writer.delete_eatlog(data)
-    return jsonify(result)
+if __name__ == '__main__':
+    app.run()
