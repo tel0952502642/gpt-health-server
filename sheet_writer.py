@@ -1,20 +1,16 @@
-import os
-import json
-import gspread
-from google.oauth2.service_account import Credentials
-
 def add_row_to_sheet(data):
-    # 從環境變數中讀取 JSON 字串
+    import os, json
+    import gspread
+    from google.oauth2.service_account import Credentials
+
     creds_info = json.loads(os.environ["GOOGLE_CREDENTIALS"])
     creds = Credentials.from_service_account_info(creds_info)
-    client = gspread.authorize(creds)
+    gc = gspread.authorize(creds)
 
-    # 打開 Google Sheet（使用 Sheet ID）
     sheet_id = '1vKHAW5WjUdqveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo'
-    spreadsheet = client.open_by_key(sheet_id)
+    spreadsheet = gc.open_by_key(sheet_id)
     worksheet = spreadsheet.worksheet("吃食紀錄表")
 
-    # 寫入資料
     worksheet.append_row([
         data.get("date", ""),
         data.get("time", ""),
@@ -25,3 +21,5 @@ def add_row_to_sheet(data):
         data.get("calories", ""),
         data.get("note", "")
     ])
+
+    print(f"✅ 寫入資料：{data}")  # ← 這行是為了 debug 回傳
