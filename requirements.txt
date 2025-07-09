@@ -2,3 +2,5 @@ flask
 gunicorn
 oauth2client
 gspread
+google-auth
+google-auth-oauthlib
