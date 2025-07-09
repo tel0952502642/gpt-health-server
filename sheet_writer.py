@@ -5,10 +5,11 @@ def add_row_to_sheet(data):
     scope = ['https://spreadsheets.google.com/feeds',
              'https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
-    sheet = gspread.authorize(creds)
+    client = gspread.authorize(creds)
 
-    sheet_url = '1vKH4W5WjUqdveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo'
-    spreadsheet = sheet.open_by_key(spreadsheet_id)
+    # 用 URL 開啟你的 spreadsheet
+    sheet_url = 'https://docs.google.com/spreadsheets/d/1vKHAW5WjUdqveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo/edit'
+    spreadsheet = client.open_by_url(sheet_url)
 
     worksheet = spreadsheet.worksheet("吃食紀錄表")
 
