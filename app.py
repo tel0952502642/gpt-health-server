@@ -16,8 +16,8 @@ creds = Credentials.from_service_account_info(creds_info, scopes=scopes)
 gc = gspread.authorize(creds)
 
 # ✅ 設定 Google Sheets 表格 ID 與工作表名稱
-SPREADSHEET_ID = "你的表格 ID"
-WORKSHEET_NAME = "吃食紀錄"
+SPREADSHEET_ID = "1vKH4W5WjUqdveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo"
+WORKSHEET_NAME = "吃食紀錄表"
 
 @app.route("/")
 def home():
