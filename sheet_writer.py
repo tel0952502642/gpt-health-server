@@ -1,18 +1,15 @@
+import gspread
+from datetime import datetime
+
+# ✅ 用新版方式載入 service account
+gc = gspread.service_account(filename="credentials.json")
+
+# ✅ 開啟試算表（建議用 Sheet ID，準確）
+sheet_id = '1vKHAW5WjUdqveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo'
+spreadsheet = gc.open_by_key(sheet_id)
+worksheet = spreadsheet.worksheet("吃食紀錄表")
+
 def add_row_to_sheet(data):
-    import gspread
-    from oauth2client.service_account import ServiceAccountCredentials
-
-    scope = ['https://spreadsheets.google.com/feeds',
-             'https://www.googleapis.com/auth/drive']
-    creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
-    client = gspread.authorize(creds)
-
-    # ✅ 正確寫法：用 Sheet ID 開啟
-    sheet_id = '1vKHAW5WjUdqveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo'
-    spreadsheet = client.open_by_key(sheet_id)
-
-    worksheet = spreadsheet.worksheet("吃食紀錄表")
-
     worksheet.append_row([
         data.get("date", ""),
         data.get("time", ""),
@@ -21,5 +18,6 @@ def add_row_to_sheet(data):
         data.get("amount", ""),
         data.get("protein", ""),
         data.get("calories", ""),
-        data.get("note", "")
-    ])
+        data.get("note", ""),
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # ✅ 自動加上記錄時間
+    ], value_input_option="USER_ENTERED")
