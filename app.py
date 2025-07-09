@@ -10,7 +10,7 @@ def index():
 @app.route("/eatlog", methods=["POST"])
 def eatlog():
     try:
-        data = request.get_json(force=True)
+        data = request.get_json()
         print(f"📩 收到資料: {data}")
 
         append_row(data)
