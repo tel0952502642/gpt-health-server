@@ -8,7 +8,7 @@ def add_row_to_sheet(data):
     gc = gspread.authorize(creds)
 
     sheet_id = '1vKHAW5WjUdqveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo'
-    spreadsheet = gc.open_by_key(sheet_id)
+    spreadsheet = gc.open_by_key(1vKH4W5WjUqdveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo)
     worksheet = spreadsheet.worksheet("吃食紀錄表")
 
     worksheet.append_row([
