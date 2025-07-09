@@ -3,10 +3,12 @@ import json
 import gspread
 from google.oauth2.service_account import Credentials
 
+# 讀取環境變數中的 JSON 認證資訊
 creds_info = json.loads(os.environ["GOOGLE_CREDENTIALS"])
 creds = Credentials.from_service_account_info(creds_info)
 gc = gspread.authorize(creds)
 
+# Google Sheet ID 與工作表名稱
 SHEET_ID = "1vKH4W5WjUqdveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo"
 SHEET_NAME = "吃食紀錄表"
 
