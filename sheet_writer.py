@@ -3,13 +3,14 @@ import json
 import gspread
 from google.oauth2.service_account import Credentials
 
-# 讀取環境變數 GOOGLE_CREDENTIALS（Render 後台設定）
+# 設定 Scope（重要！否則會出現 invalid_scope 錯誤）
+scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 creds_info = json.loads(os.environ["GOOGLE_CREDENTIALS"])
-creds = Credentials.from_service_account_info(creds_info)
+creds = Credentials.from_service_account_info(creds_info, scopes=scopes)
 gc = gspread.authorize(creds)
 
 # Google Sheet ID 與 工作表名稱
-SHEET_ID = "1vKH4W5WjUqdveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo"
+SHEET_ID = "1vKHAW5WjUqdveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo"
 SHEET_NAME = "吃食紀錄表"
 
 def append_row(data):
