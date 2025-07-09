@@ -7,9 +7,9 @@ def add_row_to_sheet(data):
     creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
     client = gspread.authorize(creds)
 
-    # 用 URL 開啟你的 spreadsheet
-    sheet_url = 'https://docs.google.com/spreadsheets/d/1vKHAW5WjUdqveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo/edit'
-    spreadsheet = client.open_by_url(sheet_url)
+    # ✅ 正確寫法：用 Sheet ID 開啟
+    sheet_id = '1vKHAW5WjUdqveQ6uwgQxNbbKagdFh-ZxeEXp-i2mQzo'
+    spreadsheet = client.open_by_key(sheet_id)
 
     worksheet = spreadsheet.worksheet("吃食紀錄表")
 
